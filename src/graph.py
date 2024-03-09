@@ -19,8 +19,8 @@ class Node:
 class Arc:
 
     def __init__(self, source: Node, destination: Node, cost: float):
-        self.source = source
-        self.destination = destination
+        self.src = source
+        self.dst = destination
         self.cost = cost
 
 
@@ -32,7 +32,7 @@ class Graph:
 
     def get_arc(self, source_index: int, destination_index: int) -> None | Arc:
         for arc in self.arcs:
-            if (arc.source.index == source_index
-                    and arc.destination.index == destination_index):
+            if (arc.src.index == source_index
+                    and arc.dst.index == destination_index):
                 return arc
         return None
