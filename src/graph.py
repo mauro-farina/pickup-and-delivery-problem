@@ -11,8 +11,8 @@ class NodeType(Enum):
 
 class Node:
 
-    def __init__(self, name: str, node_type: NodeType):
-        self.name = name
+    def __init__(self, index: int, node_type: NodeType):
+        self.index = index
         self.type = node_type
 
 
@@ -29,3 +29,10 @@ class Graph:
     def __init__(self, nodes: set[Node], arcs: set[Arc]):
         self.nodes = nodes
         self.arcs = arcs
+
+    def get_arc(self, source_index: int, destination_index: int) -> None | Arc:
+        for arc in self.arcs:
+            if (arc.source.index == source_index
+                    and arc.destination.index == destination_index):
+                return arc
+        return None
