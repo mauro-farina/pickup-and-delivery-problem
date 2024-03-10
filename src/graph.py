@@ -15,6 +15,12 @@ class Node:
         self.index = index
         self.type = node_type
 
+    def __eq__(self, other):
+        if other.__class__ is self.__class__:
+            return self.index == other.index and self.type == other.type
+        else:
+            return False
+
 
 class Arc:
 
