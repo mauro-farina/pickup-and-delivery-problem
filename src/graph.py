@@ -1,12 +1,12 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class NodeType(Enum):
-    ORIGIN_DEPOT = 1
-    DESTINATION_DEPOT = 2
-    PICKUP = 3
-    DELIVERY = 4
-    TRANSFER_STATION = 5
+class NodeType(StrEnum):
+    ORIGIN_DEPOT = 'o'
+    DESTINATION_DEPOT = 'e'
+    PICKUP = 'p'
+    DELIVERY = 'd'
+    TRANSFER_STATION = 't'
 
 
 class Node:
