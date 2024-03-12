@@ -8,3 +8,6 @@ class Request:
         self.pickup = pickup
         self.destination = destination
         self.load = int(load)
+
+    def __str__(self):
+        return f'request {self.index}: pickup={self.pickup}, destination={self.destination}, load={self.load}'

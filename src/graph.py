@@ -11,18 +11,24 @@ class NodeType(StrEnum):
 
 class Node:
 
-    def __init__(self, index: int, node_type: NodeType):
+    def __init__(self, index: int, node_type: NodeType, coordinates: tuple[int, int]):
         self.index = index
         self.type = node_type
+        self.coordinates = coordinates
 
     def __eq__(self, other):
         if other.__class__ is self.__class__:
-            return self.index == other.index and self.type == other.type
+            return (self.index == other.index
+                    and self.type == other.type
+                    and self.coordinates == other.coordinates)
         else:
             return False
 
     def __hash__(self):
         return hash(self.index)
+
+    def __str__(self):
+        return f'{self.type}{self.index}@{self.coordinates}'
 
 
 class Arc:
