@@ -41,7 +41,7 @@ class PDP_T:
         z = pdp_t.addVars(
             [(i.index, j.index, k.index)
              for i in graph.nodes
-             for j in graph.nodes if j != i
+             for j in graph.nodes if j != i  # j != i is NOT in the paper, but reduces #var and without changing result
              for k in vehicles],
             lb=0, ub=1, vtype=gb.GRB.BINARY
         )
