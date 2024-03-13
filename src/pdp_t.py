@@ -288,11 +288,11 @@ class PDP_T:
             pdp_t.addConstr(
                 gb.quicksum(
                     y[arc.src.index, arc.dst.index, k1.index, r.index]
-                    for arc in graph.arcs
+                    for arc in graph.arcs if arc.dst == t
                 )
                 + gb.quicksum(
                     y[arc.src.index, arc.dst.index, k2.index, r.index]
-                    for arc in graph.arcs
+                    for arc in graph.arcs if arc.src == t
                 )
                 <= s[t.index, r.index, k1.index, k2.index] + 1,
                 '(21)'
