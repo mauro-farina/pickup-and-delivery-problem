@@ -17,8 +17,6 @@ class PDP_T:
 
         M = len(graph.nodes)
         transfer_stations = {t for t in graph.nodes if t.type is NodeType.TRANSFER_STATION}
-        non_depot_nodes = {n for n in graph.nodes
-                           if n.type is not NodeType.ORIGIN_DEPOT and n.type is not NodeType.DESTINATION_DEPOT}
 
         # x_k_i_j = 1 if vehicle k travels through arc (i,j)
         x = pdp_t.addVars(
