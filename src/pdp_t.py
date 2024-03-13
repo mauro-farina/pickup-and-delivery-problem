@@ -98,7 +98,9 @@ class PDP_T:
             )
 
         # (3) ∑(i,j)∈A x_k_i_j − ∑(j,i)∈A x_k_i_j = 0 ∀k ∈ K, ∀i ∈ N\{o(k), o′(k)}
-        for k, i in product(vehicles, non_depot_nodes):
+        for k, i in product(vehicles, graph.nodes):
+            if i == k.origin or i == k.dest:
+                continue
             pdp_t.addConstr(
                 #  ∑(i,j)∈A x_k_i_j
                 gb.quicksum(
