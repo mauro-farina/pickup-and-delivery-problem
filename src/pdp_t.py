@@ -13,7 +13,8 @@ class PDP_T:
         pdp_t = gb.Model('pdp_t')
         pdp_t.modelSense = gb.GRB.MINIMIZE
 
-        # pdp_t.setParam('OutputFlag', 0)
+        pdp_t.setParam('OutputFlag', 0)
+        pdp_t.setParam('TimeLimit', 3600)
 
         M = len(graph.nodes)
         transfer_stations = {t for t in graph.nodes if t.type is NodeType.TRANSFER_STATION}
