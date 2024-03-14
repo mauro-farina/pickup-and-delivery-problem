@@ -327,13 +327,6 @@ class PDP_T:
     def get_result(self) -> tuple[str, float, float, float]:
         return self.get_status(), round(self.pdp_t.ObjVal, 7), self.pdp_t.MIPGap, self.pdp_t.Runtime
 
-    def print_result(self):
-        if self.pdp_t.status == gb.GRB.OPTIMAL:
-            print(f"Optimal solution found in {self.pdp_t.Runtime}")
-            print(f"Objective value: {self.pdp_t.objVal}")
-        else:
-            print("No solution found")
-
     def get_status(self):
         code_to_keyword_map = {
             1: 'LOADED',
@@ -355,5 +348,3 @@ class PDP_T:
             17: 'MEM_LIMIT'
         }
         return code_to_keyword_map[self.pdp_t.Status]
-
-
