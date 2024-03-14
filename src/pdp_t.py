@@ -308,7 +308,7 @@ class PDP_T:
                 '(22)'
             )
 
-        # (25)
+        # (25) ∑(i,j)∈A x_k_i_j = 1 ∀k ∈ K, i = o(k)
         for k in vehicles:
             pdp_t.addConstr(
                 gb.quicksum(
