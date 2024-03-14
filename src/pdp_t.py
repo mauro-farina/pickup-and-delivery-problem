@@ -324,9 +324,36 @@ class PDP_T:
     def optimize(self):
         self.pdp_t.optimize()
 
+    def get_result(self) -> tuple[str, float, float, float]:
+        return self.get_status(), round(self.pdp_t.ObjVal, 7), self.pdp_t.MIPGap, self.pdp_t.Runtime
+
     def print_result(self):
         if self.pdp_t.status == gb.GRB.OPTIMAL:
-            print(f"Optimal solution found!")
+            print(f"Optimal solution found in {self.pdp_t.Runtime}")
             print(f"Objective value: {self.pdp_t.objVal}")
         else:
             print("No solution found")
+
+    def get_status(self):
+        code_to_keyword_map = {
+            1: 'LOADED',
+            2: 'OPTIMAL',
+            3: 'INFEASIBLE',
+            4: 'INF_OR_UNBD',
+            5: 'UNBOUNDED',
+            6: 'CUTOFF',
+            7: 'ITERATION_LIMIT',
+            8: 'NODE_LIMIT',
+            9: 'TIME_LIMIT',
+            10: 'SOLUTION_LIMIT',
+            11: 'INTERRUPTED',
+            12: 'NUMERIC',
+            13: 'SUBOPTIMAL',
+            14: 'INPROGRESS',
+            15: 'USER_OBJ_LIMIT',
+            16: 'WORK_LIMIT',
+            17: 'MEM_LIMIT'
+        }
+        return code_to_keyword_map[self.pdp_t.Status]
+
+
