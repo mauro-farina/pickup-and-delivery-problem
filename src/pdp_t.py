@@ -320,13 +320,13 @@ class PDP_T:
                 '(25)'
             )
 
-        self.pdp_t = model
+        self.model = model
 
     def optimize(self):
-        self.pdp_t.optimize()
+        self.model.optimize()
 
     def get_result(self) -> tuple[str, float, float, float]:
-        return self.get_status(), round(self.pdp_t.ObjVal, 7), self.pdp_t.MIPGap, self.pdp_t.Runtime
+        return self.get_status(), round(self.model.ObjVal, 7), self.model.MIPGap, self.model.Runtime
 
     def get_status(self):
         code_to_keyword_map = {
@@ -348,4 +348,4 @@ class PDP_T:
             16: 'WORK_LIMIT',
             17: 'MEM_LIMIT'
         }
-        return code_to_keyword_map[self.pdp_t.Status]
+        return code_to_keyword_map[self.model.Status]
