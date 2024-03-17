@@ -191,7 +191,7 @@ class Rais(AbstractModel):
                 )
                 <= k.capacity * x[arc.src.index, arc.dst.index, k.index],
                 '(9)'
-            ),
+            )
 
         # Revised as (17)
         # (10) x_k_i_j ≤ z_k_i_j ∀i,j ∈ N, ∀k ∈ K, i != o(k), j != o′(k)
