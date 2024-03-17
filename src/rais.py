@@ -8,7 +8,7 @@ from src.request import Request
 from src.vehicle import Vehicle
 
 
-class PDP_T(AbstractModel):
+class Rais(AbstractModel):
 
     def __init__(self, graph: Graph, vehicles: set[Vehicle], requests: set[Request]):
         super().__init__()
