@@ -13,7 +13,7 @@ class Lyu(AbstractModel):
     def __init__(self, graph: Graph, vehicles: set[Vehicle], requests: set[Request]):
 
         super().__init__()
-        model = gb.Model('PDP_T')
+        model = gb.Model('Lyu')
         model.modelSense = gb.GRB.MINIMIZE
 
         model.setParam('OutputFlag', 0)

@@ -12,7 +12,7 @@ class Sampaio(AbstractModel):
 
     def __init__(self, graph: Graph, vehicles: set[Vehicle], requests: set[Request]):
         super().__init__()
-        model = gb.Model('pdptw_t')
+        model = gb.Model('Sampaio')
         model.modelSense = gb.GRB.MINIMIZE
 
         model.setParam('OutputFlag', 0)
