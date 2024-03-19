@@ -66,6 +66,13 @@ class Lyu(AbstractModel):
             lb=0, ub=float('inf'), vtype=gb.GRB.CONTINUOUS
         )
 
+        model.setObjective(
+            gb.quicksum(
+                arc.cost * x[arc.src.index, arc.dst.index, k.index] * k.travel_unit_cost
+                for arc in graph.arcs
+                for k in vehicles)
+        )
+
         # (4) ∑∈K ∑(i,j)∈A y_k_r_i_j = 1 ∀r ∈ R, i = p(r)
         for r in requests:
             model.addConstr(
@@ -212,7 +219,7 @@ class Lyu(AbstractModel):
                 '(41)'
             )
 
-        # (42) ∑(j,i)∈A x_k_j_i = 0 ∀k ∈ K, i = o'(k)
+        # (42) ∑(j,i)∈A x_k_j_i = 1 ∀k ∈ K, i = o'(k)
         for k in vehicles:
             model.addConstr(
                 gb.quicksum(
@@ -304,6 +311,9 @@ class Lyu(AbstractModel):
         for i, k in product(graph.nodes, vehicles):
             model.addConstr(
                 a[i.index, k.index] >= i.earliest_time
+            )
+            model.addConstr(
+                b[i.index, k.index] <= i.latest_time
             )
 
         # (51) a_k_i ≤ b_k_i ∀i ∈ N, ∀k ∈ K
