@@ -1,3 +1,3 @@
 .venv/
 .idea/
-src/gurobi_example.py
+/data/
