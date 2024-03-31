@@ -42,7 +42,7 @@ class Rais(AbstractModel):
         z = model.addVars(
             [(i.index, j.index, k.index)
              for i in graph.nodes
-             for j in graph.nodes if j != i  # j != i is NOT in the paper, but reduces #var and without changing result
+             for j in graph.nodes  # if j != i does not alter the result
              for k in vehicles],
             lb=0, ub=1, vtype=gb.GRB.BINARY
         )
@@ -55,7 +55,7 @@ class Rais(AbstractModel):
             lb=0, ub=float("inf"), vtype=gb.GRB.CONTINUOUS
         )
 
-        # s_t_r_k1_k2
+        # s_t_r_k1_k2 indicate whether request r is transferred from vehicle k1 to vehicle k2 at transfer station t
         s = model.addVars(
             [(t.index, r.index, k1.index, k2.index)
              for t in transfer_stations
@@ -268,6 +268,7 @@ class Rais(AbstractModel):
             # continue if (i,j), (j,l), (l,i) NOT IN graph.arcs
             if i == j or i == l or j == l:
                 continue
+
             model.addConstr(
                 z[i.index, j.index, k.index]
                 + z[j.index, l.index, k.index]
@@ -288,6 +289,7 @@ class Rais(AbstractModel):
         for r, t, k1, k2 in product(requests, transfer_stations, vehicles, vehicles):
             if k1 == k2:
                 continue
+
             model.addConstr(
                 gb.quicksum(
                     y[arc.src.index, arc.dst.index, k1.index, r.index]
@@ -305,6 +307,7 @@ class Rais(AbstractModel):
         for r, t, k1, k2 in product(requests, transfer_stations, vehicles, vehicles):
             if k1 == k2:
                 continue
+
             model.addConstr(
                 e[t.index, k1.index] - e[t.index, k2.index]
                 <= M*(1 - s[t.index, r.index, k1.index, k2.index]),
