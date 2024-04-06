@@ -28,6 +28,11 @@ def _get_euclidean_distance(node1: Node, node2: Node) -> float:
 
 
 def get_instance_data(filepath: Path) -> tuple[Graph, set[Vehicle], set[Request]]:
+    """
+    Returns the data required to initialize a model
+    :param filepath: Path of the .txt file containing the instance's parameters
+    :return: a tuple containing the graph, the set of vehicles and the set of requests
+    """
     requests = set()
     nodes = set()
     vehicles = set()
@@ -102,6 +107,7 @@ def _pick_median_instances(df: pd.DataFrame, k: int) -> list[str]:
 
 def pick_pdpt_instances(n: int, k: int) -> list[str]:
     """
+    Pick k instances for each of the n configurations around the median value w.r.t. 'Time'
     :param n: number of parameters configurations to test
     :param k:number of instances per configuration
     :return: list of instances names
@@ -123,6 +129,7 @@ def pick_pdpt_instances(n: int, k: int) -> list[str]:
 
 def pick_pdptwt_instances(k: int) -> list[str]:
     """
+    Pick k instances for each of the n configurations around the median value w.r.t. 'Time'
     :param k:number of instances per configuration
     :return: list of instances names
     """
