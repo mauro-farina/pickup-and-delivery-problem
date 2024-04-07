@@ -84,7 +84,7 @@ class Rais(AbstractModel):
         #         '(1)'
         #     )
 
-        # (2) ∑(i,j)∈A x_k_i_j = ∑(j,l)∈A x_k_j_l ∀k ∈ K, i = o(k), l = o′ (k )
+        # (2) ∑(i,j)∈A x_k_i_j = ∑(j,l)∈A x_k_j_l ∀k ∈ K, i = o(k), l = o′ (k)
         for k in vehicles:
             model.addConstr(
                 gb.quicksum(
