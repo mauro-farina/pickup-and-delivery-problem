@@ -227,8 +227,8 @@ class Sampaio(AbstractModel):
 
         # (31) a_k1_t − b_k2_t ≤ M(1 − s_k1_k2_t_r) ∀r ∈ R, t ∈ T, k1,k2 ∈ K
         for r, t, k1, k2 in product(requests, transfer_stations, vehicles, vehicles):
-            if k1 == k2:
-                continue
+            # if k1 == k2:
+            #     continue
             model.addConstr(
                 a[t.index, k1.index]
                 - b[t.index, k2.index]
