@@ -281,7 +281,7 @@ class Rais(AbstractModel):
         for arc, k in product(graph.arcs, vehicles):
             model.addConstr(
                 e[arc.src.index, k.index] + 1 - e[arc.dst.index, k.index]
-                <= M*(1 - x[arc.src.index, arc.dst.index, k.index]),
+                <= M * (1 - x[arc.src.index, arc.dst.index, k.index]),
                 '(20)'
             )
 
@@ -310,7 +310,7 @@ class Rais(AbstractModel):
 
             model.addConstr(
                 e[t.index, k1.index] - e[t.index, k2.index]
-                <= M*(1 - s[t.index, r.index, k1.index, k2.index]),
+                <= M * (1 - s[t.index, r.index, k1.index, k2.index]),
                 '(22)'
             )
 
