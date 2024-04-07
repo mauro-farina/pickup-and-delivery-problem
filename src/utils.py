@@ -107,7 +107,7 @@ def _pick_median_instances(df: pd.DataFrame, k: int) -> list[str]:
 
 def pick_pdpt_instances(n: int, k: int) -> list[str]:
     """
-    Pick k instances for each of the n configurations around the median value w.r.t. 'Time'
+    Pick k instances for each of the first n configurations around the median value w.r.t. 'Time'
     :param n: number of parameters configurations to test
     :param k:number of instances per configuration
     :return: list of instances names
@@ -129,7 +129,7 @@ def pick_pdpt_instances(n: int, k: int) -> list[str]:
 
 def pick_pdptwt_instances(k: int) -> list[str]:
     """
-    Pick k instances for each of the n configurations around the median value w.r.t. 'Time'
+    Pick k instances for each configuration around the median value w.r.t. 'Time'
     :param k:number of instances per configuration
     :return: list of instances names
     """
