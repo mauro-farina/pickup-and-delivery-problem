@@ -149,7 +149,7 @@ def pick_pdptwt_instances(k: int, model: str, skip: list[str] = None) -> list[st
     k = min(_N_INSTANCES_PER_CONFIG, k)
 
     df = pd.read_csv(_PDPTWT_PAPER_RESULTS_PATH, sep='\t')
-    df = df[df['Model'] == 'Sampiao']
+    df = df[df['Model'] == model]
 
     pdptw_instances = list()
 
