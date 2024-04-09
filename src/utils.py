@@ -87,50 +87,63 @@ def get_instance_data(filepath: Path) -> tuple[Graph, set[Vehicle], set[Request]
     return Graph(nodes, arcs), vehicles, requests
 
 
-def _pick_median_instances(df: pd.DataFrame, k: int) -> list[str]:
+def _pick_median_instances(df: pd.DataFrame, k: int, skip: list[str] = None) -> list[str]:
     """
     Pick k instances around the median value w.r.t. 'Time' column
     :param df: the pandas DataFrame from which to pick instances
     :param k: the number of instances to pick
+    :param skip: a list of strings that identify the configurations to skip
     :return: a list of instances names
     """
     median_instances = list()
 
     df = df.sort_values(by='Time').reset_index(drop=True)
 
+    if skip is None:
+        skip = []
+
     for j in range(-ceil(k / 2), floor(k / 2)):
         t = _N_INSTANCES_PER_CONFIG / 2 + j
+
+        for stopword in skip:
+            if stopword in df['Instance'].loc[t]:
+                return []
+
         median_instances.append(df['Instance'].loc[t])
 
     return median_instances
 
 
-def pick_pdpt_instances(n: int, k: int) -> list[str]:
+def pick_pdpt_instances(n: int, k: int, model: str, skip: list[str] = None) -> list[str]:
     """
     Pick k instances for each of the first n configurations around the median value w.r.t. 'Time'
     :param n: number of parameters configurations to test
     :param k:number of instances per configuration
+    :param model: reference model for the results: either 'Rais' or 'Lyu'
+    :param skip: a list of strings that identify configurations to skip
     :return: list of instances names
     """
     n_rows = _N_INSTANCES_PER_CONFIG * 2 * n
     k = min(_N_INSTANCES_PER_CONFIG, k)
 
     df = pd.read_csv(_PDPT_PAPER_RESULTS_PATH, sep='\t', nrows=n_rows, comment='#')
-    df = df[df['Model'] == 'Rais']
+    df = df[df['Model'] == model]
 
     pdpt_instances = list()
 
     for i in range(1, n + 1):
         sub_df = df.head(_N_INSTANCES_PER_CONFIG * i).tail(_N_INSTANCES_PER_CONFIG)
-        pdpt_instances.extend(_pick_median_instances(sub_df, k))
+        pdpt_instances.extend(_pick_median_instances(sub_df, k, skip))
 
     return pdpt_instances
 
 
-def pick_pdptwt_instances(k: int) -> list[str]:
+def pick_pdptwt_instances(k: int, model: str, skip: list[str] = None) -> list[str]:
     """
     Pick k instances for each configuration around the median value w.r.t. 'Time'
     :param k:number of instances per configuration
+    :param model: reference model for the results: either 'Sampiao' or 'Lyu'
+    :param skip: a list of strings that identify configurations to skip
     :return: list of instances names
     """
     k = min(_N_INSTANCES_PER_CONFIG, k)
@@ -142,13 +155,7 @@ def pick_pdptwt_instances(k: int) -> list[str]:
 
     for i in range(1, len(df) // 10 + 1):
         sub_df = df.head(_N_INSTANCES_PER_CONFIG * i).tail(_N_INSTANCES_PER_CONFIG).reset_index(drop=True)
-
-        if '-240' not in sub_df.loc[0]['Instance']:
-            continue
-        if '5T-' in sub_df.loc[0]['Instance']:
-            continue
-
-        pdptw_instances.extend(_pick_median_instances(sub_df, k))
+        pdptw_instances.extend(_pick_median_instances(sub_df, k, skip))
 
     return pdptw_instances
 
