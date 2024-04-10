@@ -142,7 +142,7 @@ def pick_pdptwt_instances(k: int, model: str, skip: list[str] = None) -> list[st
     """
     Pick k instances for each configuration around the median value w.r.t. 'Time'
     :param k:number of instances per configuration
-    :param model: reference model for the results: either 'Sampiao' or 'Lyu'
+    :param model: reference model for the results: either 'Sampaio' or 'Lyu'
     :param skip: a list of strings that identify configurations to skip
     :return: list of instances names
     """
