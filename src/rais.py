@@ -10,7 +10,7 @@ from src.vehicle import Vehicle
 
 class Rais(AbstractModel):
 
-    def __init__(self, graph: Graph, vehicles: set[Vehicle], requests: set[Request]):
+    def __init__(self, graph: Graph, vehicles: set[Vehicle], requests: set[Request], vi: bool = False):
         super().__init__()
         model = gb.Model('Rais')
         model.modelSense = gb.GRB.MINIMIZE
@@ -324,5 +324,153 @@ class Rais(AbstractModel):
                 == 1,
                 '(25)'
             )
+
+        if vi:
+            # If vi is True, add valid inequalities (40) to (51)
+            depot_nodes = {n for n in graph.nodes
+                           if n.type is NodeType.ORIGIN_DEPOT or n.type is NodeType.DESTINATION_DEPOT}
+
+            # a_k_i represent the arrival time for vehicle k at location i
+            a = model.addVars(
+                [(n.index, k.index)
+                 for n in graph.nodes
+                 for k in vehicles],
+                lb=0, ub=float('inf'), vtype=gb.GRB.CONTINUOUS
+            )
+
+            # b_k_i represent the departure time for vehicle k at location i
+            b = model.addVars(
+                [(n.index, k.index)
+                 for n in graph.nodes
+                 for k in vehicles],
+                lb=0, ub=float('inf'), vtype=gb.GRB.CONTINUOUS
+            )
+
+            # (40) ∑(j,i)∈A x_k_j_i = 0 ∀k ∈ K, i = o(k)
+            for k in vehicles:
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.dst == k.origin
+                    )
+                    == 0,
+                    '(40)'
+                )
+
+            # (41) ∑(i,j)∈A x_k_i_j = 0 ∀k ∈ K, ∀i ∈ O ∪ O′, i != o(k)
+            for k, i in product(vehicles, depot_nodes):
+                if i == k.origin:
+                    continue
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.src == i
+                    )
+                    == 0,
+                    '(41)'
+                )
+
+            # (42) ∑(j,i)∈A x_k_j_i = 1 ∀k ∈ K, i = o'(k)
+            for k in vehicles:
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.dst == k.dest
+                    )
+                    == 1,
+                    '(42)'
+                )
+
+            # (43) ∑(i,j)∈A x_k_j_i = 0 ∀k ∈ K, i = o'(k)
+            for k in vehicles:
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.src == k.dest
+                    )
+                    == 0,
+                    '(43)'
+                )
+
+            # (44) ∑(i,j)∈A x_k_i_j ≤ 1 ∀k ∈ K, ∀i ∈ T
+            for k, i in product(vehicles, transfer_stations):
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.src == i
+                    )
+                    <= 1,
+                    '(44)'
+                )
+
+            # (45) ∑(i,j)∈A ∑k∈K x_k_i_j = 1 ∀i ∈ P ∪ D
+            for i in graph.nodes - transfer_stations - depot_nodes:
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.src == i
+                        for k in vehicles
+                    )
+                    == 1,
+                    '(45)'
+                )
+
+            # (46) ∑(i,j)∈A ∑k∈K y_k_r_i_j = 0 ∀r ∈ R, j = p(r)
+            for r in requests:
+                model.addConstr(
+                    gb.quicksum(
+                        y[arc.src.index, arc.dst.index, k.index, r.index]
+                        for arc in graph.arcs if arc.dst == r.pickup
+                        for k in vehicles
+                    )
+                    == 0,
+                    '(46)'
+                )
+
+            # (47) ∑(i,j)∈A y_k_r_i_j = 0 ∀r ∈ R, ∀k ∈ K, ∀i ∈ O ∪ O′, i != o(k), i != o′ (k)
+            for r, k, i in product(requests, vehicles, depot_nodes):
+                if i == k.origin or i == k.dest:
+                    continue
+                model.addConstr(
+                    gb.quicksum(
+                        y[arc.src.index, arc.dst.index, k.index, r.index]
+                        for arc in graph.arcs if arc.src == i
+                    )
+                    == 0,
+                    '(47)'
+                )
+
+            # (48) a_k1_t − b_k2_t ≤ M(1 − s_k1_k2_t_r) ∀r ∈ R, t ∈ T, k1,k2 ∈ K, k1 != k2
+            for r, t, k1, k2 in product(requests, transfer_stations, vehicles, vehicles):
+                if k1 == k2:
+                    continue
+                M = t.latest_time - t.earliest_time
+                model.addConstr(
+                    a[t.index, k1.index] - b[t.index, k2.index]
+                    <= M * (1 - s[t.index, r.index, k1.index, k2.index])
+                )
+
+            # (49) b_k_i + τ_k_i_j − a_k_j ≤ M(1 − x_k_i_j) ∀(i,j) ∈ A, ∀k ∈ K
+            for arc, k in product(graph.arcs, vehicles):
+                M = max(0, arc.src.latest_time + arc.cost - arc.dst.earliest_time)
+                model.addConstr(
+                    b[arc.src.index, k.index] + arc.cost - a[arc.dst.index, k.index]
+                    <= M * (1 - x[arc.src.index, arc.dst.index, k.index])
+                )
+
+            # (50) a_k_i ≥ Ei , bk_i ≤ Li ∀i ∈ N, ∀k ∈ K
+            for i, k in product(graph.nodes, vehicles):
+                model.addConstr(
+                    a[i.index, k.index] >= i.earliest_time
+                )
+                model.addConstr(
+                    b[i.index, k.index] <= i.latest_time
+                )
+
+            # (51) a_k_i ≤ b_k_i ∀i ∈ N, ∀k ∈ K
+            for i, k in product(graph.nodes, vehicles):
+                model.addConstr(
+                    a[i.index, k.index] <= b[i.index, k.index]
+                )
 
         self.model = model
