@@ -16,6 +16,7 @@ import pandas as pd
 _N_INSTANCES_PER_CONFIG = 10
 _PDPT_PAPER_RESULTS_PATH = '../data/Results/Results-PDPT.txt'
 _PDPTWT_PAPER_RESULTS_PATH = '../data/Results/Results-PDPTWT.txt'
+_PDPT_VEHICLES_PAPER_RESULTS_PATH = '../data/Results/Results-PDPT-vehicle.txt'
 
 
 def _get_euclidean_distance(node1: Node, node2: Node) -> float:
@@ -136,6 +137,30 @@ def pick_pdpt_instances(n: int, k: int, model: str, skip: list[str] = None) -> l
         pdpt_instances.extend(_pick_median_instances(sub_df, k, skip))
 
     return pdpt_instances
+
+
+def pick_pdpt_vehicles_instances(n: int, k: int, model: str, skip: list[str] = None) -> list[str]:
+    """
+    Pick k instances for each of the first n configurations around the median value w.r.t. 'Time'
+    :param n: number of parameters configurations to test
+    :param k:number of instances per configuration
+    :param model: reference model for the results: either 'Rais' or 'Lyu'
+    :param skip: a list of strings that identify configurations to skip
+    :return: list of instances names
+    """
+    n_rows = _N_INSTANCES_PER_CONFIG * 2 * n
+    k = min(_N_INSTANCES_PER_CONFIG, k)
+
+    df = pd.read_csv(_PDPT_VEHICLES_PAPER_RESULTS_PATH, sep='\t', nrows=n_rows, comment='#')
+    df = df[df['Model'] == model]
+
+    pdpt_v_instances = list()
+
+    for i in range(1, n + 1):
+        sub_df = df.head(_N_INSTANCES_PER_CONFIG * i).tail(_N_INSTANCES_PER_CONFIG)
+        pdpt_v_instances.extend(_pick_median_instances(sub_df, k, skip))
+
+    return pdpt_v_instances
 
 
 def pick_pdptwt_instances(k: int, model: str, skip: list[str] = None) -> list[str]:
