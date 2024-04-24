@@ -5,7 +5,7 @@ _TIME = ['TIME_LIMIT', 'FEASIBLE', 'TIMEOUT']
 _NO = ['TIME_LIMIT', 'TIMEOUT']
 
 
-def get_results_data(df: pd.DataFrame) -> pd.DataFrame:
+def get_results_stats(df: pd.DataFrame) -> pd.DataFrame:
     """
     Given a DataFrame containing a computation's results, returns data on performance.
     This function expects a DataFrame containing the columns Params, Time, Gap, Status
@@ -67,9 +67,9 @@ if __name__ == '__main__':
     df_lyu = df[df['Model'] == 'Lyu']
 
     print('Rais')
-    t = get_results_data(df_rais)
+    t = get_results_stats(df_rais)
     print(t)
 
     print('Lyu')
-    t = get_results_data(df_lyu)
+    t = get_results_stats(df_lyu)
     print(t)
