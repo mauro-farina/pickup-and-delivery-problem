@@ -14,9 +14,9 @@ import pandas as pd
 
 
 _N_INSTANCES_PER_CONFIG = 10
-_PDPT_PAPER_RESULTS_PATH = '../data/Results/Results-PDPT.txt'
-_PDPTWT_PAPER_RESULTS_PATH = '../data/Results/Results-PDPTWT.txt'
-_PDPT_VEHICLES_PAPER_RESULTS_PATH = '../data/Results/Results-PDPT-vehicle.txt'
+PDPT_PAPER_RESULTS_PATH = '../data/Results/Results-PDPT.txt'
+PDPTWT_PAPER_RESULTS_PATH = '../data/Results/Results-PDPTWT.txt'
+PDPT_VEHICLES_PAPER_RESULTS_PATH = '../data/Results/Results-PDPT-vehicle.txt'
 
 
 def _get_euclidean_distance(node1: Node, node2: Node) -> float:
