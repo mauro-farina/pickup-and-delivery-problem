@@ -54,7 +54,7 @@ def _get_gap(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _get_t(df: pd.DataFrame) -> pd.DataFrame:
-    res = df[df['Status'].isin(_OPT)].groupby('Params')['Time'].mean()
+    res = df.groupby('Params')['Time'].mean()
     res.name = 't'
     return res
 
