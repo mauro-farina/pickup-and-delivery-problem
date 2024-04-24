@@ -1,7 +1,7 @@
 import pandas as pd
 
 _OPT = ['OPTIMAL']
-_TIME = ['TIME_LIMIT', 'FEASIBLE']
+_TIME = ['TIME_LIMIT', 'FEASIBLE', 'TIMEOUT']
 _NO = ['TIME_LIMIT', 'TIMEOUT']
 
 
