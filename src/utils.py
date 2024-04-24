@@ -127,7 +127,7 @@ def pick_pdpt_instances(n: int, k: int, model: str, skip: list[str] = None) -> l
     n_rows = _N_INSTANCES_PER_CONFIG * 2 * n
     k = min(_N_INSTANCES_PER_CONFIG, k)
 
-    df = pd.read_csv(_PDPT_PAPER_RESULTS_PATH, sep='\t', nrows=n_rows, comment='#')
+    df = pd.read_csv(PDPT_PAPER_RESULTS_PATH, sep='\t', nrows=n_rows, comment='#')
     df = df[df['Model'] == model]
 
     pdpt_instances = list()
@@ -151,7 +151,7 @@ def pick_pdpt_vehicles_instances(n: int, k: int, model: str, skip: list[str] = N
     n_rows = _N_INSTANCES_PER_CONFIG * 2 * n
     k = min(_N_INSTANCES_PER_CONFIG, k)
 
-    df = pd.read_csv(_PDPT_VEHICLES_PAPER_RESULTS_PATH, sep='\t', nrows=n_rows, comment='#')
+    df = pd.read_csv(PDPT_VEHICLES_PAPER_RESULTS_PATH, sep='\t', nrows=n_rows, comment='#')
     df = df[df['Model'] == model]
 
     pdpt_v_instances = list()
@@ -173,7 +173,7 @@ def pick_pdptwt_instances(k: int, model: str, skip: list[str] = None) -> list[st
     """
     k = min(_N_INSTANCES_PER_CONFIG, k)
 
-    df = pd.read_csv(_PDPTWT_PAPER_RESULTS_PATH, sep='\t')
+    df = pd.read_csv(PDPTWT_PAPER_RESULTS_PATH, sep='\t')
     df = df[df['Model'] == model]
 
     pdptw_instances = list()
