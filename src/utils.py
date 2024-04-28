@@ -79,13 +79,13 @@ def get_instance_data(filepath: Path, *, sampaio: bool = False) -> tuple[Graph, 
 
             if node_type == NodeType.ORIGIN_DEPOT:
                 if sampaio:
-                    vehicles.add(Vehicle(i_vehicles, node, node, 100))
+                    vehicles.add(Vehicle(i_vehicles, node, node, params['capacity']))
                     i_vehicles += 1
                 else:
                     origin_depot_nodes[node_data['node']] = node
             if node_type == NodeType.DESTINATION_DEPOT:
                 origin_node = origin_depot_nodes['o' + node_data['node'][1:]]
-                vehicles.add(Vehicle(i_vehicles, origin_node, node, 100))
+                vehicles.add(Vehicle(i_vehicles, origin_node, node, params['capacity']))
                 i_vehicles += 1
 
     for n1, n2 in product(nodes, nodes):
