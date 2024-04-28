@@ -28,10 +28,12 @@ def _get_euclidean_distance(node1: Node, node2: Node) -> float:
     return ((x2 - x1)**2 + (y2 - y1)**2) ** 0.5
 
 
-def get_instance_data(filepath: Path) -> tuple[Graph, set[Vehicle], set[Request]]:
+def get_instance_data(filepath: Path, *, sampaio: bool = False) -> tuple[Graph, set[Vehicle], set[Request]]:
     """
     Returns the data required to initialize a model
     :param filepath: Path of the .txt file containing the instance's parameters
+    :param sampaio: Set to true to obtain the instance data for the Sampaio model (for each vehicle, the origin depot
+    coincides with the destination depot)
     :return: a tuple containing the graph, the set of vehicles and the set of requests
     """
     requests = set()
@@ -61,6 +63,9 @@ def get_instance_data(filepath: Path) -> tuple[Graph, set[Vehicle], set[Request]
             earliest_time = int(node_data['a'])
             latest_time = int(node_data['b'])
 
+            if sampaio and node_type == NodeType.DESTINATION_DEPOT:
+                continue
+
             node = Node(i, node_type, coords, earliest_time, latest_time)
             nodes.add(node)
 
@@ -73,7 +78,11 @@ def get_instance_data(filepath: Path) -> tuple[Graph, set[Vehicle], set[Request]
                 i_requests += 1
 
             if node_type == NodeType.ORIGIN_DEPOT:
-                origin_depot_nodes[node_data['node']] = node
+                if sampaio:
+                    vehicles.add(Vehicle(i_vehicles, node, node, 100))
+                    i_vehicles += 1
+                else:
+                    origin_depot_nodes[node_data['node']] = node
             if node_type == NodeType.DESTINATION_DEPOT:
                 origin_node = origin_depot_nodes['o' + node_data['node'][1:]]
                 vehicles.add(Vehicle(i_vehicles, origin_node, node, 100))
