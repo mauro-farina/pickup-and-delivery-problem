@@ -10,7 +10,7 @@ from src.vehicle import Vehicle
 
 class Sampaio(AbstractModel):
 
-    def __init__(self, graph: Graph, vehicles: set[Vehicle], requests: set[Request]):
+    def __init__(self, graph: Graph, vehicles: set[Vehicle], requests: set[Request], *, vi: bool = False):
         super().__init__()
         model = gb.Model('Sampaio')
         model.modelSense = gb.GRB.MINIMIZE
@@ -238,6 +238,8 @@ class Sampaio(AbstractModel):
 
         # (34) ∑(i,j)∈A x_k_i_j − ∑(j,i)∈A x_k_j_i = 0 ∀k ∈ K, ∀i ∈ N
         for k, i in product(vehicles, graph.nodes):
+            if vi and (i == k.origin or i == k.dest):
+                continue
             model.addConstr(
                 gb.quicksum(
                     x[arc.src.index, arc.dst.index, k.index]
@@ -304,3 +306,101 @@ class Sampaio(AbstractModel):
             )
 
         self.model = model
+
+        if vi:
+            depot_nodes = {n for n in graph.nodes
+                           if n.type is NodeType.ORIGIN_DEPOT or n.type is NodeType.DESTINATION_DEPOT}
+
+            # (40) ∑(j,i)∈A x_k_j_i = 0 ∀k ∈ K, i = o(k)
+            for k in vehicles:
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.dst == k.origin
+                    )
+                    == 0,
+                    '(40)'
+                )
+
+            # (41) ∑(i,j)∈A x_k_i_j = 0 ∀k ∈ K, ∀i ∈ O ∪ O′, i != o(k)
+            for k, i in product(vehicles, depot_nodes):
+                if i == k.origin:
+                    continue
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.src == i
+                    )
+                    == 0,
+                    '(41)'
+                )
+
+            # (42) ∑(j,i)∈A x_k_j_i = 1 ∀k ∈ K, i = o'(k)
+            for k in vehicles:
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.dst == k.dest
+                    )
+                    == 1,
+                    '(42)'
+                )
+
+            # (43) ∑(i,j)∈A x_k_j_i = 0 ∀k ∈ K, i = o'(k)
+            for k in vehicles:
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.src == k.dest
+                    )
+                    == 0,
+                    '(43)'
+                )
+
+            # (44) ∑(i,j)∈A x_k_i_j ≤ 1 ∀k ∈ K, ∀i ∈ T
+            for k, i in product(vehicles, transfer_stations):
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.src == i
+                    )
+                    <= 1,
+                    '(44)'
+                )
+
+            # (45) ∑(i,j)∈A ∑k∈K x_k_i_j = 1 ∀i ∈ P ∪ D
+            for i in graph.nodes - transfer_stations - depot_nodes:
+                model.addConstr(
+                    gb.quicksum(
+                        x[arc.src.index, arc.dst.index, k.index]
+                        for arc in graph.arcs if arc.src == i
+                        for k in vehicles
+                    )
+                    == 1,
+                    '(45)'
+                )
+
+            # (46) ∑(i,j)∈A ∑k∈K y_k_r_i_j = 0 ∀r ∈ R, j = p(r)
+            for r in requests:
+                model.addConstr(
+                    gb.quicksum(
+                        y[arc.src.index, arc.dst.index, k.index, r.index]
+                        for arc in graph.arcs if arc.dst == r.pickup
+                        for k in vehicles
+                    )
+                    == 0,
+                    '(46)'
+                )
+
+            # (47) ∑(i,j)∈A y_k_r_i_j = 0 ∀r ∈ R, ∀k ∈ K, ∀i ∈ O ∪ O′, i != o(k), i != o′ (k)
+            for r, k, i in product(requests, vehicles, depot_nodes):
+                if i == k.origin or i == k.dest:
+                    continue
+                model.addConstr(
+                    gb.quicksum(
+                        y[arc.src.index, arc.dst.index, k.index, r.index]
+                        for arc in graph.arcs if arc.src == i
+                    )
+                    == 0,
+                    '(47)'
+                )
