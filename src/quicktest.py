@@ -1,6 +1,6 @@
-from src.rais import Rais
-from src.lyu import Lyu
-from src.sampaio import Sampaio
+from src.models.rais import Rais
+from src.models.lyu import Lyu
+from src.models.sampaio import Sampaio
 from src.utils import get_instance_data
 
 from pathlib import Path
