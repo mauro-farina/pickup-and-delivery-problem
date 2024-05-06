@@ -18,14 +18,14 @@ inconsistent spelling;
 
 ## Setup
 1. Close repository
-    ```bash
+    ```
     git clone https://github.com/mauro-farina/pickup-and-delivery-problem.git
     ```
 2. Move to cloned directory
-    ```bash
+    ```
     cd pickup-and-delivery-problem
     ```
 3. Install dependencies
-    ```bash
+    ```
    pip install -r requirements.txt
    ```
