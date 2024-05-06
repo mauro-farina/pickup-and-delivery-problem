@@ -1,11 +1,11 @@
 from itertools import product
 
-from src.request import Request
-from src.vehicle import Vehicle
-from src.graph import NodeType
-from src.graph import Node
-from src.graph import Arc
-from src.graph import Graph
+from src.network.request import Request
+from src.network.vehicle import Vehicle
+from src.network.graph import NodeType
+from src.network.graph import Node
+from src.network.graph import Arc
+from src.network.graph import Graph
 
 from math import floor, ceil
 from pathlib import Path

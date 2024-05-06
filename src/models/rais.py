@@ -3,9 +3,9 @@ import gurobipy as gb
 from itertools import product
 
 from src.models.abstract_model import AbstractModel
-from src.graph import Graph, NodeType
-from src.request import Request
-from src.vehicle import Vehicle
+from src.network.graph import Graph, NodeType
+from src.network.request import Request
+from src.network.vehicle import Vehicle
 
 
 class Rais(AbstractModel):
