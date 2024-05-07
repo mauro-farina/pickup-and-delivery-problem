@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Optional
 
 import argparse
+import os
 import re
 
 
@@ -52,9 +53,16 @@ def rais(path: Path) -> None:
     print(path.name, '\tRais\t', model.get_result())
 
 
+def _get_path_prefix():
+    if os.getcwd().endswith(os.sep + 'src'):
+        return '../'
+    else:
+        return ''
+
+
 def _get_pdpt_path(r: int, k: int, t: int, num: int) -> Optional[Path]:
     params = f'PDPT-R{r}-K{k}-T{t}'
-    path = Path(f'../data/PDPT/{params}/{params}-Q100-{num}.txt')
+    path = Path(f'{_get_path_prefix()}data/PDPT/{params}/{params}-Q100-{num}.txt')
     if path.exists():
         return path
     else:
@@ -63,7 +71,7 @@ def _get_pdpt_path(r: int, k: int, t: int, num: int) -> Optional[Path]:
 
 def _get_pdptwt_path(r: int, k: int, t: int, shift: int, d: str, num: int) -> Optional[Path]:
     params = f'{r}R-{k}K-{t}T'
-    path = Path(f'../data/PDPTWT/{params.replace('-', '')}/{params}-{shift}{d}-{num}.txt')
+    path = Path(f'{_get_path_prefix()}data/PDPTWT/{params.replace('-', '')}/{params}-{shift}{d}-{num}.txt')
     if path.exists():
         return path
     else:
