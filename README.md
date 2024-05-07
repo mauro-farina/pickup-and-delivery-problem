@@ -29,7 +29,8 @@ inconsistent spelling;
     ```
    pip install -r requirements.txt
    ```
-4. Launch `run.py` to solve a given instance with a certain model; usage: `python src/run.py [instance_name] [model_name]`
+4. Launch `run.py` to solve a given instance with a certain model; 
+usage: `python src/run.py [instance_name] [model_name]`
 where instance_name is the name of a file containing the instance data
 and model_name is one of Rais, Sampaio or Lyu. For example:
     ```
