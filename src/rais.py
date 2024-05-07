@@ -12,7 +12,7 @@ class Rais(AbstractModel):
 
     def __init__(self, graph: Graph, vehicles: set[Vehicle], requests: set[Request], vi: bool = False):
         super().__init__()
-        model = gb.Model('Rais')
+        model = gb.Model('Rais', env=gb.Env(params={'OutputFlag': 0}))
         model.modelSense = gb.GRB.MINIMIZE
 
         model.setParam('OutputFlag', 0)
