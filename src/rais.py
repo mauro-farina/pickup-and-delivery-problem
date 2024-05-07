@@ -2,10 +2,10 @@ import gurobipy as gb
 
 from itertools import product
 
-from src.abstract_model import AbstractModel
-from src.graph import Graph, NodeType
-from src.request import Request
-from src.vehicle import Vehicle
+from abstract_model import AbstractModel
+from graph import Graph, NodeType
+from request import Request
+from vehicle import Vehicle
 
 
 class Rais(AbstractModel):

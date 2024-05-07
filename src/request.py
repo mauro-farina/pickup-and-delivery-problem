@@ -1,4 +1,4 @@
-from src.graph import Node
+from graph import Node
 from dataclasses import dataclass
 
 

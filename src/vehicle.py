@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.graph import Node
+from graph import Node
 
 
 @dataclass(frozen=True)
