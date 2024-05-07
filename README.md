@@ -14,7 +14,7 @@ inconsistent spelling;
   - `rais.py`, `sampaio.py` and `lyu.py`: Gurobi MILP models;
   - `graph.py`, `request.py` and `vehicle.py`: network elements of the PDP-T;
   - `computations.ipynb`: run bulk computations over multiple instances;
-  - `run.py`: to quickly test the performance of a model on a given instance from CLI.
+  - `run.py`: quickly test the performance of a model on a given instance from CLI.
 
 ## Setup
 1. Close repository
