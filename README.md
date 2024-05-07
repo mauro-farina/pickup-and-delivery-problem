@@ -11,10 +11,10 @@ inconsistent spelling;
 - `results` contains the results obtained by the Gurobi solver with a time limit of 1 hour;
 - `figures` contains plots made to analyze the results;
 - `src` is the python package containing all the code. In particular:
-  - `src/models`: Gurobi MILP models;
-  - `src/network`: network elements of the PDPTW-T;
-  - `src/computations.ipynb`: run bulk computations over multiple instances;
-  - `src/quicktest.py`: quickly test the models on a given instance.
+  - `rais.py`, `sampaio.py` and `lyu.py`: Gurobi MILP models;
+  - `graph.py`, `request.py` and `vehicle.py`: network elements of the PDP-T;
+  - `computations.ipynb`: run bulk computations over multiple instances;
+  - `run.py`: to quickly test the performance of a model on a given instance from CLI.
 
 ## Setup
 1. Close repository
@@ -28,4 +28,10 @@ inconsistent spelling;
 3. Install dependencies
     ```
    pip install -r requirements.txt
+   ```
+4. Launch `run.py` to solve a given instance with a certain model; usage: `python src/run.py [instance_name] [model_name]`
+where instance_name is the name of a file containing the instance data
+and model_name is one of Rais, Sampaio or Lyu. For example:
+    ```
+   python src/run.py PDPT-R5-K2-T1-Q100-5.txt Rais
    ```
