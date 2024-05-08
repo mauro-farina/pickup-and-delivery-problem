@@ -31,8 +31,8 @@ inconsistent spelling;
    ```
 4. Launch `run.py` to solve a given instance with a certain model; 
 usage: `python src/run.py [instance_name] [model_name]`
-where instance_name is the name of a file containing the instance data
-and model_name is one of Rais, Sampaio or Lyu. For example:
+where *instance_name* is the name of a file containing the instance data
+and *model_name* is one of Rais, Sampaio or Lyu. For example:
     ```
    python src/run.py PDPT-R5-K2-T1-Q100-5.txt Rais
    ```
