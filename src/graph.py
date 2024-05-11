@@ -1,8 +1,8 @@
-from enum import StrEnum
+from enum import Enum
 from dataclasses import dataclass
 
 
-class NodeType(StrEnum):
+class NodeType(Enum):
     ORIGIN_DEPOT = 'o'
     DESTINATION_DEPOT = 'e'
     PICKUP = 'p'
