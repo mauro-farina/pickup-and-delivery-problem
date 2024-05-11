@@ -16,6 +16,9 @@ inconsistent spelling;
   - `computations.ipynb`: run bulk computations over multiple instances;
   - `run.py`: quickly test the performance of a model on a given instance from CLI.
 
+## Python
+- The repository has been tested with Python 3.9 and 3.12
+
 ## Setup
 1. Close repository
     ```
