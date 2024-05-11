@@ -71,7 +71,8 @@ def _get_pdpt_path(r: int, k: int, t: int, num: int) -> Optional[Path]:
 
 def _get_pdptwt_path(r: int, k: int, t: int, shift: int, d: str, num: int) -> Optional[Path]:
     params = f'{r}R-{k}K-{t}T'
-    path = Path(f'{_get_path_prefix()}data/PDPTWT/{params.replace('-', '')}/{params}-{shift}{d}-{num}.txt')
+    subdir = params.replace('-', '')
+    path = Path(f'{_get_path_prefix()}data/PDPTWT/{subdir}/{params}-{shift}{d}-{num}.txt')
     if path.exists():
         return path
     else:
