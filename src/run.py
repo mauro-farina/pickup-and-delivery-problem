@@ -112,10 +112,13 @@ if __name__ == '__main__':
         exit(1)
 
     if model.lower() == 'rais' and 'PDPTWT' not in path.parts:
+        print('Running...')
         rais(path)
     elif model.lower() == 'sampaio' and 'PDPTWT' in path.parts:
+        print('Running...')
         sampaio(path)
     elif model.lower() == 'lyu':
+        print('Running...')
         lyu(path)
     else:
         print(f'{model.title()} model cannot solve {instance}')
